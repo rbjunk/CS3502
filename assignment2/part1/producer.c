@@ -51,9 +51,9 @@ int main(int argc, char *argv[])
     }
 
     size_t bytes_read;
-    while((bytes_read = fread(buffer, 1, buffer_size, input)) != 0)
+    while((bytes_read = fread(buffer, 1, buffer_size, input)) > 0)
     {
-        fwrite(buffer, 1, buffer_size, stdout);
+        fwrite(buffer, 1, bytes_read, stdout);
     }
 
     free(buffer);
