@@ -103,10 +103,11 @@ int main(int argc, char *argv[])
             fprintf (stderr, "[STATS]\nLines per second: %f\n", (line_count / cpu_time));
             fprintf (stderr, "Bytes per second: %f\n", (character_count / cpu_time));
             fprintf (stderr, "MBytes per second: %f\n", throughput);
+            fprintf (stderr, "CPU time (sec): %f\n", cpu_time);
             stats_flag = 0;
         }
         sleep(1);
     }
-    printf("Gradeful shutdown requested\n shutting down...\n");
+    printf("Gradeful shutdown requested\nshutting down...\n");
     return 0;
 }

@@ -41,7 +41,13 @@ int main(int argc, char *argv[])
     if (filename != NULL)
     {
         input = fopen(filename, "r");
+        if (input == NULL)
+        {
+            fprintf (stderr, "Error: could not open file \"%s\"", filename);
+            return 1;
+        }
     }
+
 
     char *buffer = malloc(buffer_size);
     if (buffer == NULL)
