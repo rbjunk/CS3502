@@ -14,7 +14,7 @@ struct Account
 };
 
 const int TRANSACTIONS_PER_TELLER = 100;
-const int NUMBER_OF_THREADS = 10;
+const int NUMBER_OF_THREADS = 1000;
 struct Account active_accounts[CURRENT_ACCOUNT_AMOUNT];
 
 
@@ -25,7 +25,8 @@ void* teller_thread(void* arg) //teller function, which will be sent to each thr
     for (int i = 0; i < TRANSACTIONS_PER_TELLER; i++)
     {
         int current_account = rand_r(&seed) % CURRENT_ACCOUNT_AMOUNT; //select a random account
-        if ((rand_r(&seed) % 2) == 0) //deposit money into current_account
+        //if ((rand_r(&seed) % 2) == 0) //deposit or withdraw money into current_account randomly
+        if (0 == 0) //deposit only mode
         {
             active_accounts[current_account].balance += 1;
             active_accounts[current_account].transaction_count++;
@@ -47,7 +48,8 @@ int main()
     int thread_ids[NUMBER_OF_THREADS];
     for (int i = 0; i < CURRENT_ACCOUNT_AMOUNT; i++)
     {
-        active_accounts[i].balance = 1000;
+        active_accounts[i].balance = 10000;
+        printf("Initial balance for account %d: $%f\n", i, active_accounts[i].balance);
     }
     for (int i = 0; i < NUMBER_OF_THREADS; i++)
     {
@@ -60,7 +62,9 @@ int main()
     }
     for(int i = 0; i < CURRENT_ACCOUNT_AMOUNT; i++)
     {
-        printf("Account %d balance:$%f\n", i, active_accounts[i].balance);
+        float expected = 10000 + TRANSACTIONS_PER_TELLER * NUMBER_OF_THREADS;
+        printf("Expected final balance for account %d: $%f\n", i, expected);
+        printf("Account %d final balance:$%f\n", i, active_accounts[i].balance);
     }
     return 0;
 }
