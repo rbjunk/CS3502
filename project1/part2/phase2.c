@@ -11,10 +11,11 @@ struct Account
     int account_id;
     double balance;
     int transaction_count;
+    pthread_mutex_t lock; //mutex for current account
 };
 
-const int TRANSACTIONS_PER_TELLER = 10000;
-const int NUMBER_OF_THREADS = 100;
+const int TRANSACTIONS_PER_TELLER = 100;
+const int NUMBER_OF_THREADS = 1000;
 struct Account active_accounts[CURRENT_ACCOUNT_AMOUNT];
 
 
@@ -28,15 +29,19 @@ void* teller_thread(void* arg) //teller function, which will be sent to each thr
         //if ((rand_r(&seed) % 2) == 0) //deposit or withdraw money into current_account randomly
         if (0 == 0) //deposit only mode
         {
+            pthread_mutex_lock(&active_accounts[current_account].lock);
             active_accounts[current_account].balance += 1;
             active_accounts[current_account].transaction_count++;
             //printf("Teller %d: Depositing $1.00; account #%d transaction #%d\n", teller_id, current_account, active_accounts[current_account].transaction_count);
+            pthread_mutex_unlock(&active_accounts[current_account].lock);
         }
         else //withdraw money from current_account
         {
+            pthread_mutex_lock(&active_accounts[current_account].lock);
             active_accounts[current_account].balance -= 1;
             active_accounts[current_account].transaction_count++;
             //printf("Teller %d: Withdrawing $1.00; account #%d transaction #%d\n", teller_id, current_account, active_accounts[current_account].transaction_count);
+            pthread_mutex_unlock(&active_accounts[current_account].lock);
         }
     }
     return NULL;
@@ -48,6 +53,7 @@ int main()
     int thread_ids[NUMBER_OF_THREADS];
     for (int i = 0; i < CURRENT_ACCOUNT_AMOUNT; i++)
     {
+        pthread_mutex_init(&active_accounts[i].lock, NULL);
         active_accounts[i].balance = 10000;
         printf("Initial balance for account %d: $%f\n", i, active_accounts[i].balance);
     }
