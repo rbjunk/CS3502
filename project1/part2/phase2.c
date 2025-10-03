@@ -55,6 +55,7 @@ int main()
     {
         pthread_mutex_init(&active_accounts[i].lock, NULL);
         active_accounts[i].balance = 10000;
+        active_accounts[i].account_id = i;
         printf("Initial balance for account %d: $%f\n", i, active_accounts[i].balance);
     }
     double start = clock();
@@ -73,7 +74,7 @@ int main()
     {
         float expected = 10000 + TRANSACTIONS_PER_TELLER * NUMBER_OF_THREADS;
         printf("Expected final balance for account %d: $%f\n", i, expected);
-        printf("Account %d final balance:$%f\n", i, active_accounts[i].balance);
+        printf("Account %d final balance:$%f\n", active_accounts[i].account_id, active_accounts[i].balance);
         printf("total cpu time: %f\n", total_cpu_time);
     }
     return 0;
