@@ -61,7 +61,7 @@ int main()
         printf("Initial balance for account %d: $%f\n", active_accounts[i].account_id, active_accounts[i].balance);
     }
 
-    for(int i = 0; i < NUMBER_OF_THREADS; i++)
+/*     for(int i = 0; i < NUMBER_OF_THREADS; i++)
     {
         printf("Attempting to transfer $100\n");
         struct Transfer_Args *args = malloc(sizeof(struct Transfer_Args));
@@ -77,7 +77,17 @@ int main()
         args->amount = 100;
         pthread_create(&threads[i], NULL, transfer , args);
     }
+ */
 
+     for(int i = 0; i < NUMBER_OF_THREADS; i++) //create a circular account transaction loop to ensure a deadlock scenario
+    {
+        printf("Attempting to transfer $100\n");
+        struct Transfer_Args *args = malloc(sizeof(struct Transfer_Args));
+        args->from_account_id = active_accounts[i].account_id;
+        args->to_account_id = active_accounts[(i + 1) % CURRENT_ACCOUNT_AMOUNT].account_id;
+        args->amount = 100;
+        pthread_create(&threads[i], NULL, transfer , args);
+    }
     for (int i = 0; i < NUMBER_OF_THREADS; i++)
     {
         pthread_join(threads[i], NULL);
