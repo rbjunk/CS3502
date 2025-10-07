@@ -5,7 +5,7 @@
 #include <time.h>
 #include <string.h>
 #include <errno.h>
-#define CURRENT_ACCOUNT_AMOUNT 3 //static int for total number of accounts
+#define CURRENT_ACCOUNT_AMOUNT 1 //static int for total number of accounts
 struct Account //structure for the account data
 {
     int account_id;
@@ -43,6 +43,14 @@ void* teller_thread(void* arg) //teller function, which will be sent to each thr
             //printf("Teller %d: Withdrawing $1.00; account #%d transaction #%d\n", teller_id, current_account, active_accounts[current_account].transaction_count);
             pthread_mutex_unlock(&active_accounts[current_account].lock);
         }
+    }
+    if (mode == 'd')
+    {
+        printf("Teller %d: performed %d deposits\n", teller_id, TRANSACTIONS_PER_TELLER);
+    }
+    else
+    {
+        printf("Teller %d: performed %d deposits\n", teller_id, TRANSACTIONS_PER_TELLER);
     }
     return NULL;
 }
