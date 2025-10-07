@@ -5,7 +5,7 @@
 #include <time.h>
 #include <string.h>
 #include <errno.h>
-#define CURRENT_ACCOUNT_AMOUNT 2
+#define CURRENT_ACCOUNT_AMOUNT 5
 struct Account
 {
     int account_id;
@@ -21,7 +21,7 @@ struct Transfer_Args
     double amount;
 };
 
-const int NUMBER_OF_THREADS = 2;
+const int NUMBER_OF_THREADS = 5;
 struct Account active_accounts[CURRENT_ACCOUNT_AMOUNT];
 
 
@@ -34,27 +34,27 @@ void *transfer(void* arg)
     printf("Thread %ld: Attempting transfer from account:%d to account:%d\n", pthread_self(), from_account_id, to_account_id);
     if (from_account_id < to_account_id)
     {
-    pthread_mutex_lock(&active_accounts[from_account_id].lock);
-    printf("Locked account:%d\n", from_account_id);
-    printf("Thread %ld: Waiting for account:%d\n", pthread_self(), to_account_id);
-    //simulate processing delay to create deadlock
-    usleep(1000);
-    pthread_mutex_lock(&active_accounts[to_account_id].lock);
-    printf("Locked account:%d\n", to_account_id);
-    active_accounts[from_account_id].balance -= amount;
-    active_accounts[to_account_id].balance += amount;
+        pthread_mutex_lock(&active_accounts[from_account_id].lock);
+        printf("Locked account:%d\n", from_account_id);
+        printf("Thread %ld: Waiting for account:%d\n", pthread_self(), to_account_id);
+        //simulate processing delay to create deadlock
+        usleep(1000);
+        pthread_mutex_lock(&active_accounts[to_account_id].lock);
+        printf("Locked account:%d\n", to_account_id);
+        active_accounts[from_account_id].balance -= amount;
+        active_accounts[to_account_id].balance += amount;
     }
     else
     {
-    pthread_mutex_lock(&active_accounts[to_account_id].lock);
-    printf("Locked account:%d\n", to_account_id);
-    printf("Thread %ld: Waiting for account:%d\n", pthread_self(), from_account_id);
-    //simulate processing delay to create deadlock
-    usleep(1000);
-    pthread_mutex_lock(&active_accounts[from_account_id].lock);
-    printf("Locked account:%d\n", from_account_id);
-    active_accounts[from_account_id].balance -= amount;
-    active_accounts[to_account_id].balance += amount;
+        pthread_mutex_lock(&active_accounts[to_account_id].lock);
+        printf("Locked account:%d\n", to_account_id);
+        printf("Thread %ld: Waiting for account:%d\n", pthread_self(), from_account_id);
+        //simulate processing delay to create deadlock
+        usleep(1000);
+        pthread_mutex_lock(&active_accounts[from_account_id].lock);
+        printf("Locked account:%d\n", from_account_id);
+        active_accounts[from_account_id].balance -= amount;
+        active_accounts[to_account_id].balance += amount;
     }
 
     pthread_mutex_unlock(&active_accounts[from_account_id].lock);
@@ -78,16 +78,15 @@ int main()
     {
         printf("Attempting to transfer $100\n");
         struct Transfer_Args *args = malloc(sizeof(struct Transfer_Args));
-        if(i % 2 == 0)
+        unsigned int seed = time(NULL);
+        int from_account_selection = rand_r(&seed) % (CURRENT_ACCOUNT_AMOUNT);
+        int to_account_selection = rand_r(&seed) % (CURRENT_ACCOUNT_AMOUNT);
+        while (from_account_selection == to_account_selection)
         {
-        args->from_account_id = active_accounts[0].account_id;
-        args->to_account_id = active_accounts[1].account_id;
+            to_account_selection = rand_r(&seed) % (CURRENT_ACCOUNT_AMOUNT);
         }
-        else
-        {
-        args->from_account_id = active_accounts[1].account_id;
-        args->to_account_id = active_accounts[0].account_id;
-        }
+        args->from_account_id = active_accounts[from_account_selection].account_id;
+        args->to_account_id = active_accounts[to_account_selection].account_id;
         args->amount = 100;
         pthread_create(&threads[i], NULL, transfer , args);
     }

@@ -5,7 +5,7 @@
 #include <time.h>
 #include <string.h>
 #include <errno.h>
-#define CURRENT_ACCOUNT_AMOUNT 1 //static int for total number of accounts
+#define CURRENT_ACCOUNT_AMOUNT 3 //static int for total number of accounts
 struct Account //structure for the account data
 {
     int account_id;
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
     }
     double end = clock();
     double total_cpu_time = (end - start) / CLOCKS_PER_SEC; //calculate total time (in seconds) that the tasks took
-    for(int i = 0; i < CURRENT_ACCOUNT_AMOUNT; i++)
+    for(int i = 0; i < CURRENT_ACCOUNT_AMOUNT; i++) //get rid of mutexes
     {
         pthread_mutex_destroy(&active_accounts[i].lock);
     }

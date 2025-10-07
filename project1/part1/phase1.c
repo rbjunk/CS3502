@@ -5,7 +5,7 @@
 #include <time.h>
 #include <string.h>
 #include <errno.h>
-#define CURRENT_ACCOUNT_AMOUNT 1 //static int for total number of accounts
+#define CURRENT_ACCOUNT_AMOUNT 3 //static int for total number of accounts
 struct Account //structure for the account data
 {
     int account_id;
