@@ -88,6 +88,12 @@ int main()
     {
         pthread_join(threads[i], NULL);
     }
+
+    for(int i = 0; i < CURRENT_ACCOUNT_AMOUNT; i++) //get rid of mutexes
+    {
+        pthread_mutex_destroy(&active_accounts[i].lock);
+    }
+    
     for(int i = 0; i < CURRENT_ACCOUNT_AMOUNT; i++)
     {
         printf("Account %d final balance:$%f\n", i, active_accounts[i].balance);

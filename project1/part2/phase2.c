@@ -62,17 +62,17 @@ int main(int argc, char *argv[])
     {
         switch(opt)
         {
-            case 'd':
+            case 'd': //deposit mode
             {
                 mode = 'd';
                 break;
             }
-            case 'w':
+            case 'w': //withdraw mode
             {
                 mode = 'w';
                 break;
             }
-            case 'h':
+            case 'h': //display help
             default:
             {
                 printf("Usage: [-d deposit mode (default)] [-w withdraw mode]\n");
