@@ -49,6 +49,7 @@ void* teller_thread(void* arg) //teller function, which will be sent to each thr
     }
     return NULL;
 }
+
 int main(int argc, char *argv[])
 {
     int opt;
