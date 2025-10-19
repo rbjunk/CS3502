@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "CakV6JWBKIk=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\canno\\Source\\Repos\\CS-3502-CPU-Sim-Project-StartingPoint\\CpuScheduler\\CpuScheduler.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\canno\\.nuget\\packages\\microsoft.visualbasic\\10.3.0\\microsoft.visualbasic.10.3.0.nupkg.sha512"
+  ],
+  "logs": []
+}
